@@ -1,5 +1,7 @@
 import testeRoutes from  './routes/teste.routes';
-import usersRoutes from  './routes/users.routes';
+import publicRoutes from  './routes/public.routes';
+import privateRoutes from  './routes/private.routes';
+
 
 import express from 'express'
 
@@ -7,11 +9,12 @@ import express from 'express'
 const app = express();
 app.use(express.json())
 
-app.use("/test", testeRoutes)
-// rotas  publicas
+app.use("/test", testeRoutes);
 
-app.use("/public", usersRoutes)
+// rotas  publicas
+app.use("/public", publicRoutes);
 // rotas de admin
-// rotas privadas
+app.use("/private", privateRoutes);
+
 
 export default app;

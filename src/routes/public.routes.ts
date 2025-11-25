@@ -6,8 +6,8 @@ const router = Router();
 //router.use(express.json())
 
 router.post('/cadastro', createUser);
-router.get("/usuarios", getAllUsers);
-router.get("/usuarios/:name", getUserName);
+router.get("/feed", getAllUsers);
+router.get("/feed/:name", getUserName);
 
 // rota de registro
 // rota de login

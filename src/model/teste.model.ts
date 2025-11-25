@@ -4,8 +4,8 @@ import { ParsedUrlQuery } from "querystring";
 
 const pingt = 'pong'
 
-export const getTestPingModel  = (ping:string) => {
-  ping = pingt
+export const getTestPingModel = () => {
+
   if(pingt == 'pong') {
     return pingt
   }

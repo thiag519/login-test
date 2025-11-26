@@ -1,12 +1,13 @@
 import { Request, Response } from "express"
-import { userSchema } from "../validations/userSchema"
-import { createUserModel, getUserNameModal, getUsersModel } from "../model/public.model";
+import { userSchemaCadastro } from "../validations/userSchemaCadastro"
+import { createUserModel, findUserEmailPasswordModal, getUserNameModal, getUsersModel } from "../models/public.model";
+import { userSchemaLogin } from "../validations/userSchemaLogin";
 
 
 
 // Criar usuario
 export const createUser = async (req: Request, res: Response) => {
-  const parsedData = userSchema.safeParse(req.body);
+  const parsedData = userSchemaCadastro.safeParse(req.body);
   
   if(!parsedData.success) {
     const errors = parsedData.error.issues.map(issue => issue.message);
@@ -57,7 +58,35 @@ export const getUserName = async (req:Request, res:Response) => {
   } catch (err) {
     res.status(500).json({error: 'Error ao buscar usuário.', err});
   }
+};
+
+export const loginUser = async (req: Request, res:Response) => {
+  
+  const parsedData = userSchemaLogin.safeParse(req.body);
+  
+  if(!parsedData.success) {
+    const errors = parsedData.error.issues.map(issue => issue.message);
+    return res.status(400).json({success: false, error: 'Dados inválidos', details:errors});
+  }
+  
+  try {
+    const {email, password} = parsedData.data;
+    //const {email, password} = req.body;
+    if( !email || !password) {
+      return res.status(401).json({error: 'E-mail e senha são obrigatório.'});
+    }
+    const user = await findUserEmailPasswordModal(email, password);
+    if(user) {
+      return res.status(200).json({success: true, user});
+    }
+
+    if(user === null){
+      return res.status(401).json({success: false, error: 'E-mail ja cadastrado!'});
+    }
+
+  } catch (err) {
+    res.status(500).json({error: 'Error ao conectar na conta.', err});
+  }
+
 }
 
-// Alterar dados do usuário
-// Remover usuário

@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getTestPingModel } from "../model/teste.model";
+import { getTestPingModel } from "../models/teste.model";
 
 
 export const getTestPingPong = async (req: Request, res:Response) => {

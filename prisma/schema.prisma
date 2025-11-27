@@ -38,3 +38,5 @@ model Post {
   userId      Int
   author      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+//passo 1 refresh token: criar model RefreshToken no schema.prisma

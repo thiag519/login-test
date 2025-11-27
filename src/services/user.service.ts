@@ -8,5 +8,7 @@ export const createUserTokenService = (user: User) => {
   console.log(payload);
   const secret = process.env.JWT_KEY;
   if(!secret) throw new Error("JWT_KEY not defined");
-  return jwt.sign(payload, secret, {algorithm: 'HS256', expiresIn: '1d'});
-}
+  return jwt.sign(payload, secret, {algorithm: 'HS256', expiresIn: '5 minutes'});
+};
+
+// passo 2 refresh token: criar função que cria o refreshtoken na pasta services

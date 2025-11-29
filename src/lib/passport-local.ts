@@ -16,7 +16,6 @@ export const localStrategy = new LocalStrategy({
     const response: LocalStrategyResponse = {
       auth:{token}, user
     };
-    console.log("Resposta do lacalStrategy: ", response);
     return done(null,  response);
   }
 });

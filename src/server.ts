@@ -8,8 +8,6 @@ import { localStrategy } from "./lib/passport-local";
 dotenv.config();
 const server = express();
 
-//server.use('/', router);
-
 passport.use(jwtStrategy);// passo 6 jwt
 passport.use(localStrategy);
 server.use(passport.initialize());

@@ -1,13 +1,9 @@
 import { Request, Response } from "express"
 import { userSchemaCadastro } from "../validations/userSchemaCadastro"
-import { createUserModel, findUserEmailPasswordModal, getUserNameModal, getUsersModel } from "../models/public.model";
+import { createUserModel, findUserEmailPasswordModal, getPostsModel, getUserNameModal, getUsersModel } from "../models/public.model";
 import { userSchemaLogin } from "../validations/userSchemaLogin";
-import { createUserTokenService } from "../services/user.service";
-import { authenticate } from "passport";
 
 
-
-// Criar usuario
 export const createUser = async (req: Request, res: Response) => {
   const parsedData = userSchemaCadastro.safeParse(req.body);
   
@@ -21,12 +17,10 @@ export const createUser = async (req: Request, res: Response) => {
     if(!name || !email || !password) {
       return res.status(401).json({error: 'Nome, email e senha são obrigatório.'});
     }
-
     const user = await createUserModel(name, email, password);
     if(user) {
       return res.status(200).json({success: true, user});
     }
-
     if(user === null){
       return res.status(401).json({success: false, error: 'E-mail ja cadastrado!'});
     }
@@ -35,19 +29,20 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// Pegar todos os usuarios
+
 export const getAllUsers = async (req:Request, res:Response) => {
-  const arrName:string[] = [];
+  //const arrName:string[] = [];
   try {
     const users = await getUsersModel();
-    users?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
-    console.log(arrName)
+    //users?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
+    
     if(users == null) return res.status(401).json({success: false, error: "Usuários não encontrados."});
     return res.status(200).json({success: true, users});
   } catch (err) {
     res.status(500).json({error: 'Error ao listar usuários.', err});
   }
 };
+
 
 export const getUserName = async (req:Request, res:Response) => {
   const {name} = req.params;
@@ -61,6 +56,7 @@ export const getUserName = async (req:Request, res:Response) => {
     res.status(500).json({error: 'Error ao buscar usuário.', err});
   }
 };
+
 
 export const loginUser = async (req: Request, res:Response) => {
   const parsedData = userSchemaLogin.safeParse(req.body);
@@ -76,9 +72,7 @@ export const loginUser = async (req: Request, res:Response) => {
     }
     const user = await findUserEmailPasswordModal(email, password);
     if(user) {
-      //return res.status(200).json({success: true, user});
       const token = req.authInfo ;
-      //console.log("Token : ", token)
       return res.status(200).json({success:true, token, user});
     }
     if(user === null){
@@ -87,6 +81,20 @@ export const loginUser = async (req: Request, res:Response) => {
   } catch (err) {
     res.status(500).json({error: 'Error ao conectar na conta.', err});
   }
+};
 
-}
+
+export const getAllPosts = async (req:Request, res:Response) => {
+ // const arrPostTitle:string[] = [];
+  try {
+    const posts = await getPostsModel();
+
+    //posts?.filter((e) => {arrPostTitle.push(e.title, e.content) });// casou eu queira apenas os nomes
+
+    if(posts == null) return res.status(401).json({success: false, error: "Posts não encontrados."});
+    return res.status(200).json({success: true, posts});
+  } catch (err) {
+    res.status(500).json({error: 'Error ao listar posts.', err});
+  }
+};
 

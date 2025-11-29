@@ -9,8 +9,6 @@ const options = {
 }
 
 export const jwtStrategy = new JwtStrategy( options, async (payload, done) => {
-  console.log("Payload  em jwtStrategy: ",payload);
-
   const {id} = payload;
   const user = await findUserByIdModel(id);
   if(!user) {

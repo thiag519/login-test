@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { postSchemaCreate } from "../validations/postSchemaCreate";
-import { createPostModel, DeletePostByIdModel, votePostDownModel, votePostUpModel } from "../models/private.model";
+import { checkHistoryModal, createHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, Reacting, votePostDownModel, votePostUpModel } from "../models/private.model";
 import { User } from "../../generated/prisma/client";
 
 // Crear post
@@ -17,11 +17,11 @@ export const createPost = async (req:Request, res: Response) => {
     const {title, content} = parsedData.data;
      
     if(!title || !content ) return res.status(400).json({success:false, error: "Dados imcompletos. "})
-    const newPost = await createPostModel(title, content,userId);
+    const newPost = await createPostModel(title, content, userId);
     return res.status(201).json({success:true, newPost});
     
-  } catch (error) {
-    
+  } catch (err) {
+    return res.status(500).json({success: false, error: "Erro ao criar post.", err});
   }
 };
 
@@ -46,14 +46,19 @@ export const deletePost = async (req:Request, res:Response) => {
 
 // Curtir post
 export const votePostDown = async (req:Request, res:Response) => {
+  const user = req.user as User
+  const userId  = user.id
   try {
     const { idPost } = req.params;
 
     console.log( "idPost:", idPost);
+    console.log("userId: ", userId)
     const postVoteDow = await votePostDownModel(Number(idPost) );
     if(postVoteDow == null) {
       return res.status(401).json({success:false, error: "Post não encontrado."});
     };
+  
+    createHistoryModal(Number(userId), Number(idPost));
     return res.status(200).json({success: true, message: "Voto feito com sucesso.", postVoteDow});
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao fazer a votação.", err});
@@ -61,16 +66,54 @@ export const votePostDown = async (req:Request, res:Response) => {
 };
 
 export const votePostUp = async (req:Request, res:Response) => {
+  const user = req.user as User
+  const userId  = user.id
   try {
     const { idPost } = req.params;
 
     console.log( "idPost:", idPost);
+    console.log("userId: ", userId);
     const postVoteUp = await votePostUpModel(Number(idPost) );
     if(postVoteUp == null) {
       return res.status(401).json({success:false, error: "Post não encontrado."});
     };
+    
+    createHistoryModal(Number(userId), Number(idPost));
     return res.status(200).json({success: true, message: "Voto feito com sucesso.", postVoteUp});
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao fazer a votação.", err});
   };
 };
+
+// History
+export const deleteAllHistory = async (req: Request, res: Response) => {
+  const user = req.user as User
+  const userId  = user.id
+  try {
+    const historyDeleted = await deleteHitoryUserById(Number(userId));
+
+    if(historyDeleted == null)  {
+      return res.status(401).json({success:false, error: "Historico não encontrado."})
+    };
+
+    return res.status(201).json({success: true, message: 'Historico limpo com sucesso.'})
+  } catch (err) {
+     return res.status(500).json({success: false, error: "Erro ao limpar historico.", err});
+  }
+};
+
+export const getHistoryByUserId = async (req: Request, res: Response) => {
+  const user = req.user as User
+  const userId  = user.id 
+  console.log("userId: ", userId);
+  try {
+    const historyUser = await checkHistoryModal(userId);
+    
+    if(historyUser === null) {
+     return res.status(401).json({success:false, error: "Historico não encontrado."}) 
+    }
+    return res.status(201).json({success: true, message: 'Historico de curtidas do usuario.', historyUser})
+  } catch (err) {
+    return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
+  }
+}

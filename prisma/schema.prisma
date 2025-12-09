@@ -26,6 +26,7 @@ model User {
   role       Role        @default(USER)
   createdAt  DateTime    @default(now())
   posts      Post[]
+  history    History[]
 }
 
 model Post {
@@ -36,7 +37,20 @@ model Post {
   reactUp     Int          @default(0)
   createdAt   DateTime     @default(now())
   userId      Int
+  history     History[]
   author      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model History {
+  id         Int         @id      @default(autoincrement())
+  userId     Int
+  postId     Int
+  createdAt  DateTime    @default(now())
+
+  post       Post        @relation(fields: [postId], references: [id])
+  user       User        @relation(fields: [userId], references: [id])
+
+  @@unique([userId, postId])
 }
 
 //passo 1 refresh token: criar model RefreshToken no schema.prisma

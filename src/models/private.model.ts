@@ -1,5 +1,13 @@
+import { History } from "../../generated/prisma/client";
 import { prisma } from "../lib/prisma"
 
+export type Reacting =  {
+  reactUp:string;
+  reactDown:string;
+}
+
+
+// Users
 
 //passo 2 jwt
 export const findUserByIdModel = async (id: number) => {
@@ -19,6 +27,9 @@ export const DeleteUserByIdModel = async (id: number) => {
   };
   return null;
 }
+
+
+// Posts
 
 export const createPostModel = async (title:string, content: string,userId:number) => {
   //const existingUserId = await prisma.post.findFirst({where: {userId: Number(userId)}});
@@ -65,6 +76,31 @@ export const votePostDownModel = async (idPost: number) => {
   const postDown = await prisma.post.update({where: {id: idPost},data: {reactDown: existingPost.reactDown += 1}});
   return postDown;
   
+};
+
+
+
+// history
+
+export const createHistoryModal = async (userId:number, postId:number) => {
+  const history = await prisma.history.create({
+    data: {userId, postId}
+  });
+  return history;
+};
+
+export const checkHistoryModal = async (userId:number) => {
+  const userHistoric = await prisma.history.findMany({where: {userId: userId}});
+  if(!userHistoric) return null;
+  return userHistoric;
+};
+
+export const deleteHitoryUserById = async (userId:number) => {
+  const deleteHistory = await prisma.history.deleteMany({
+    where:{userId: userId}
+  });
+  if(!deleteHistory) return null;
+  return deleteHistory;
 }
 
 

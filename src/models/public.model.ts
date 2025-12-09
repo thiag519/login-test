@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from "../lib/prisma";
+import { createUserTokenService } from '../services/user.service';
+import { User } from '../../generated/prisma/client';
 
 
 export const createUserModel = async ( name:string, email:string, password:string) => {
@@ -9,19 +11,21 @@ export const createUserModel = async ( name:string, email:string, password:strin
   const user = await prisma.user.create({
     data: {name, email, password: hashedPassword}
   });
-  return user;
+  const token = createUserTokenService(user)
+  return {token, user};
 };
 
 
 export const getUsersModel = async () => {
   let page = 1;
-  let skip = (page - 1) * 10;
+  let skip = (page - 1) * 5;
   const userAll = await prisma.user.findMany(
     {
       orderBy:{createdAt: 'desc'},
       skip: skip,
-      take: 10,
+      take: 5,
       select: {
+      id:true,
       name:true,
       createdAt:true,
       _count:{select: {posts:true}}
@@ -45,7 +49,8 @@ export const getPostsModel = async () => {
       content: true,
       reactDown: true,
       reactUp: true,
-      createdAt:true
+      createdAt:true,
+      userId:true
     }}
   );
   if(!postsAll) return null;
@@ -57,7 +62,7 @@ export const getUserNameModal = async (nome:string) => {
   const user = await prisma.user.findMany({
     where : {
       name:{
-        startsWith:nome, mode: 'insensitive'
+        startsWith:nome, mode: 'insensitive', 
       } 
     }
   });
@@ -79,4 +84,5 @@ export const findUserEmailPasswordModal = async (email:string, password:string) 
     return null;
   } 
   return existingUser;
+  
 }

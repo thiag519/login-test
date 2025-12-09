@@ -17,11 +17,12 @@ export const createUser = async (req: Request, res: Response) => {
     if(!name || !email || !password) {
       return res.status(401).json({error: 'Nome, email e senha são obrigatório.'});
     }
-    const user = await createUserModel(name, email, password);
-    if(user) {
-      return res.status(200).json({success: true, user});
+    const userData = await createUserModel(name, email, password);
+    
+    if(userData) {
+      return res.status(200).json({success: true, userData});
     }
-    if(user === null){
+    if(userData === null){
       return res.status(401).json({success: false, error: 'E-mail ja cadastrado!'});
     }
   } catch (err) {
@@ -46,12 +47,15 @@ export const getAllUsers = async (req:Request, res:Response) => {
 
 export const getUserName = async (req:Request, res:Response) => {
   const {name} = req.params;
+  const arrName:string[] = [];
   try {
     
     if(!name)return res.status(401).json({success:false, error: "Usuário não encontrado."});
-    const userName = await getUserNameModal(name);
-    if(userName == null) return res.status(400).json({success:false, error: 'Usuário não encontrado.'});
-    return res.status(200).json({success: true, userName});
+    const user = await getUserNameModal(name);
+    user?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
+
+    if(arrName == null) return res.status(400).json({success:false, error: 'Usuário não encontrado.'});
+    return res.status(200).json({success: true, arrName});
   } catch (err) {
     res.status(500).json({error: 'Error ao buscar usuário.', err});
   }
@@ -73,7 +77,7 @@ export const loginUser = async (req: Request, res:Response) => {
     const user = await findUserEmailPasswordModal(email, password);
     if(user) {
       const token = req.authInfo ;
-      return res.status(200).json({success:true, token, user});
+      return res.status(200).json({success:true,token,  user});
     }
     if(user === null){
       return res.status(401).json({success: false, error: 'E-mail ja cadastrado!'});

@@ -14,11 +14,11 @@ export const createPost = async (req:Request, res: Response) => {
       return res.status(400).json({success: false, error: 'Dados inválidos', details:errors});
     }
   try {
-    const {title, content, reactUp=0, reactDown=0} = parsedData.data;
+    const {title, content} = parsedData.data;
      
     if(!title || !content ) return res.status(400).json({success:false, error: "Dados imcompletos. "})
-    const newPost = await createPostModel(title, content, userId, reactDown, reactUp);
-    return res.status(201).json({success:true, data: newPost});
+    const newPost = await createPostModel(title, content,userId);
+    return res.status(201).json({success:true, newPost});
     
   } catch (error) {
     

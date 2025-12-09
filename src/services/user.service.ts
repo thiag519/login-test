@@ -1,5 +1,5 @@
 import { User } from "../../generated/prisma/client";
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 
 
 // passo 4 jwt

@@ -20,12 +20,10 @@ export const DeleteUserByIdModel = async (id: number) => {
   return null;
 }
 
-export const createPostModel = async (title:string, content: string, userId: number,reactDown:number,reactUp:number) => {
+export const createPostModel = async (title:string, content: string,userId:number) => {
   //const existingUserId = await prisma.post.findFirst({where: {userId: Number(userId)}});
-  reactDown = 0;
-  reactUp = 0;
   const post = await prisma.post.create({
-    data: {title, content, userId, reactDown, reactUp}
+    data: {title, content,userId}
   });
   return post;
 };

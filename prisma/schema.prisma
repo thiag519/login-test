@@ -29,14 +29,14 @@ model User {
 }
 
 model Post {
-  id          Int         @id      @default(autoincrement())
+  id          Int          @id      @default(autoincrement())
   title       String
   content     String
-  reactDown   Int
-  reactUp     Int
-  createdAt   DateTime    @default(now())
+  reactDown   Int          @default(0) 
+  reactUp     Int          @default(0)
+  createdAt   DateTime     @default(now())
   userId      Int
-  author      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  author      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 //passo 1 refresh token: criar model RefreshToken no schema.prisma

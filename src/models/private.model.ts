@@ -1,4 +1,3 @@
-import { History } from "../../generated/prisma/client";
 import { prisma } from "../lib/prisma"
 
 export type Reacting =  {
@@ -53,7 +52,7 @@ export const DeletePostByIdModel = async (idPost: number, idUser:number) => {
   return null;
 }
 
-export const votePostUpModel = async (idPost: number) => {
+/*export const votePostUpModel = async (idPost: number) => {
   const existingPost = await prisma.post.findFirst({where: {
     id: Number(idPost)
   }});
@@ -63,24 +62,41 @@ export const votePostUpModel = async (idPost: number) => {
   };
   const postUp = await prisma.post.update({where: {id: idPost},data: {reactUp: existingPost.reactUp += 1}});
   return postUp;
-};
+};*/
 
-export const votePostDownModel = async (idPost: number) => {
-  const existingPost = await prisma.post.findFirst({where: {
-    id: Number(idPost)
-  }});
+export const votePostModel = async (postId: number, userId:number, react:string) => {
+  const existingPost = await prisma.post.findUnique({where:{id: postId }});
   if(!existingPost) {
     console.log("Post não encontrado.")
-    return null;
+    return {error: "Post não encontrado.", status: 404 };
   };
-  const postDown = await prisma.post.update({where: {id: idPost},data: {reactDown: existingPost.reactDown += 1}});
-  return postDown;
-  
+
+  const existingVoto = await findVotoDuplicado(userId, postId);
+
+  if(existingVoto) return {error: "Você já votou nesse post.", status: 400};
+
+  const updatedPost = await prisma.post.update({where: {id: postId},data: {
+    reactDown: react === "reactDown"? existingPost.reactDown + 1: existingPost.reactDown,
+    reactUp: react === "reactUp"? existingPost.reactUp + 1: existingPost.reactUp
+  }});
+
+  await createHistoryModal(userId, postId);
+  return updatedPost;
+
 };
 
 
 
 // history
+export const findVotoDuplicado = async (userId:number, postId:number) => {
+  const existingVoto = await prisma.history.findUnique({
+    where: {userId_postId: {userId, postId}}
+  });
+  if(existingVoto){
+    return true
+  }
+  return false
+}
 
 export const createHistoryModal = async (userId:number, postId:number) => {
   const history = await prisma.history.create({
@@ -90,7 +106,7 @@ export const createHistoryModal = async (userId:number, postId:number) => {
 };
 
 export const checkHistoryModal = async (userId:number) => {
-  const userHistoric = await prisma.history.findMany({where: {userId: userId}});
+  const userHistoric = await prisma.history.findMany({where: {userId}});
   if(!userHistoric) return null;
   return userHistoric;
 };

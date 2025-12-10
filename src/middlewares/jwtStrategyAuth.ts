@@ -6,12 +6,16 @@ import { User } from "../../generated/prisma/client";
 export const jwtStrategyAuth: RequestHandler = (req, res, next) => {
   const authResquest = passport.authenticate('jwt', 
     (err: any, user: User |false) => {
-      if(user) {
-        req.user = user;
-        return next();
+      if(err){
+        console.log("Erro no Passport JWT: ",err);
+        return res.status(500).json({error: 'Erro interno na autenticaçãi.'});
       }
-      return res.status(401).json({error: "Acesso negado, token inválido ou não existente."});
+      if(!user) {
+        return res.status(401).json({error: "Acesso negado, token inválido ou não existente."});
+      }
+      req.user = user;
+      return next()
     }
   );
   authResquest(req, res, next);
-}
+} 

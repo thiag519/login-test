@@ -32,7 +32,6 @@ export const deletePost = async (req:Request, res:Response) => {
   try {
     const { idPost } = req.params;
 
-    console.log("idUser:", idUser, "idPost:", idPost);
     const postDeleted = await DeletePostByIdModel(Number(idPost), Number(idUser) );
     if(!postDeleted) {
       return res.status(401).json({success:false, error: "Post ou usuário não encontrado."});
@@ -50,7 +49,6 @@ export const votePostDown = async (req:Request, res:Response) => {
   const userId  = user.id;
   try {
     const { idPost } = req.params;
-    console.log( "idPost:", idPost, "userId: ", userId);
 
     const voteDown:string = 'reactDown';
     const postVoteDow = await votePostModel(Number(idPost), userId, voteDown );
@@ -70,7 +68,6 @@ export const votePostUp = async (req:Request, res:Response) => {
   try {
     const { idPost } = req.params;
 
-    console.log( "idPost:", idPost, "userId: ", userId);
     const voteUp:string = 'reactUp';
 
     const postVoteUp = await votePostModel(Number(idPost), userId, voteUp);
@@ -104,7 +101,6 @@ export const deleteAllHistory = async (req: Request, res: Response) => {
 export const getHistoryByUserId = async (req: Request, res: Response) => {
   const user = req.user as User
   const userId  = user.id 
-  console.log("userId: ", userId);
   try {
     const historyUser = await checkHistoryModal(userId);
     

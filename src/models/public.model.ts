@@ -1,7 +1,5 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from "../lib/prisma";
-import { createUserTokenService } from '../services/user.service';
-import { User } from '../../generated/prisma/client';
 
 
 export const createUserModel = async ( name:string, email:string, password:string) => {
@@ -11,19 +9,19 @@ export const createUserModel = async ( name:string, email:string, password:strin
   const user = await prisma.user.create({
     data: {name, email, password: hashedPassword}
   });
-  const token = createUserTokenService(user)
-  return {token, user};
+  //const token = createUserTokenService(user)
+  return { user};
 };
 
 
 export const getUsersModel = async () => {
   let page = 1;
-  let skip = (page - 1) * 5;
+  let skip = (page - 1) * 10;
   const userAll = await prisma.user.findMany(
     {
       orderBy:{createdAt: 'desc'},
       skip: skip,
-      take: 5,
+      take: 10,
       select: {
       id:true,
       name:true,

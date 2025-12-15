@@ -12,7 +12,16 @@ export type Reacting =  {
 export const findUserByIdModel = async (id: number) => {
   //pegar usuario do bd pelo id
   const existingUser = await prisma.user.findUnique({where: {id: Number(id)}});
-  console.log("Usuario findUserByIdModel :",existingUser);
+  if(!existingUser) return null;
+  return existingUser;
+}
+
+export const getUserByIdModel = async (id: number) => {
+  //pegar usuario do bd pelo id
+  const existingUser = await prisma.user.findUnique({
+    where: {id: Number(id)},
+    select: {id:true, name: true, email:true}
+  });
   if(!existingUser) return null;
   return existingUser;
 }
@@ -84,7 +93,6 @@ export const votePostModel = async (postId: number, userId:number, react:string)
   return updatedPost;
 
 };
-
 
 
 // history

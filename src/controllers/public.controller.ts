@@ -4,6 +4,7 @@ import { createUserModel, findUserEmailPasswordModal, getPostsModel, getUserName
 import { userSchemaLogin } from "../validations/userSchemaLogin";
 
 
+
 export const createUser = async (req: Request, res: Response) => {
   const parsedData = userSchemaCadastro.safeParse(req.body);
   

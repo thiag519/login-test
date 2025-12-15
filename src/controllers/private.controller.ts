@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import { DeleteUserByIdModel, findUserByIdModel } from "../models/private.model";
-
+import { DeleteUserByIdModel, findUserByIdModel, getUserByIdModel } from "../models/private.model";
+import jwt from 'jsonwebtoken';
 
 
 // Àrea de usuário 
 export const userArea = async (req:Request, res:Response) => {
-  console.log("req.authInfo no auserArea: ", req.authInfo)
   try {
     const {id} = req.params;
     const user = await findUserByIdModel(Number(id));
@@ -33,6 +32,32 @@ export const deleteUser = async (req:Request, res:Response) => {
     return res.status(500).json({success: false, error: "Erro ao excluir usuário.", err});
   };
 };
+
+export const me = async (req: Request, res: Response) => {
+
+  const authHeader = req.headers.authorization;
+  if(!authHeader) {
+    return res.status(401).json({authenticated: false});
+  }
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
+    const user = await getUserByIdModel(decoded.id);
+
+    if(!user) {
+      return res.status(401).json({authenticated: false});
+    }
+
+    return res.json({
+      authenticated: true,
+      userId: user.id,
+      user,
+    });
+
+  } catch (error) {
+    return res.status(401).json({authenticated: false});
+  }
+}
 
 // Alterar usuário
 

@@ -2,7 +2,10 @@ import { Request, Response } from "express"
 import { userSchemaCadastro } from "../validations/userSchemaCadastro"
 import { createUserModel, findUserEmailPasswordModal, getPostsModel, getUserNameModal, getUsersModel } from "../models/public.model";
 import { userSchemaLogin } from "../validations/userSchemaLogin";
-
+import sharp from "sharp";
+import { v4 } from "uuid";
+import fs from 'node:fs/promises'
+;
 
 
 export const createUser = async (req: Request, res: Response) => {
@@ -95,3 +98,42 @@ export const getAllPosts = async (req:Request, res:Response) => {
   }
 };
 
+
+export const uploadController = async (req: Request, res: Response) => {
+  
+ if(req.file) {
+  
+  const newName = v4()+'.png';
+
+  const image = await sharp(req.file.path)
+    .resize(1280, 740, {fit:'cover'})
+    .toBuffer();
+  const ffinalImage = await sharp(image)
+    .composite([
+      {input: './src/assets/up.png', gravity: 'southeast'}
+    ])
+    .toFile('./public/images/'+newName);
+
+  const thumbImage = await sharp(image)
+    .resize(200)
+    .toFile('./public/images/thumb-'+newName);
+
+  /*
+  const image = await sharp(req.file.path)
+    .resize(1280, 740, {fit:'cover'})
+    .composite([
+      {input: './src/assets/up.png', gravity: 'southeast'}
+    ])
+    //.grayscale()
+    //.tint('#cdcffe')
+    .toFormat('png')
+    .toFile('./public/images/'+newName);
+  */
+
+  await fs.unlink(req.file.path); //deleta o arquivo temporario
+
+ } else {
+  console.log('Nenhum arquivo enviado.')
+ }
+ res.json({})
+}

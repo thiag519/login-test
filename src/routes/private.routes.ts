@@ -3,6 +3,7 @@ import { deleteUser, me, userArea} from "../controllers/private.controller";
 
 import { checkIdUserIdReqAuth } from "../middlewares/checkIdUserIdReqAuth";
 import { createPost, deleteAllHistory, deletePost, getHistoryByUserId, votePostDown, votePostUp } from "../controllers/private.post.controller";
+import { upload } from "../lib/multer";
 
 const router = Router();
 //deletar user

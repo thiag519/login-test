@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { createUser, getAllPosts, getAllUsers, getUserName, loginUser } from "../controllers/public.controller";
+import { createUser, getAllPosts, getAllUsers, getUserName, loginUser, uploadController} from "../controllers/public.controller";
 import { localStrategyAuth } from "../middlewares/localStrategyAuth";
+import { upload } from "../lib/multer";
 
 const router = Router();
 
@@ -12,6 +13,8 @@ router.post("/login",localStrategyAuth, loginUser);
 //Ezibir todos os posts
 router.get("/posts", getAllPosts);
 //Exibir post por título 
+
+router.post('/upload', upload.single('arquivo'), uploadController)
 
 
 export default router;

@@ -59,6 +59,7 @@ export const me = async (req: Request, res: Response) => {
   }
 }
 
+
 // Alterar usuário
 
 // passo 4 refresh token: criar função que pega orefreshtoken da requisição, 

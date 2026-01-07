@@ -23,7 +23,7 @@ export const createUser = async (req: Request, res: Response) => {
     };
     return res.status(201).json({success: true, userData});
   } catch (err) {
-    res.status(500).json({error: 'Erro ao criar conta.',details: err});
+    return res.status(500).json({error: 'Erro ao criar conta.',details: err});
   }
 };
 
@@ -60,7 +60,24 @@ export const getUserName = async (req:Request, res:Response) => {
 
 
 export const loginUser = async (req: Request, res:Response) => {
-  const parsedData = userSchemaLogin.safeParse(req.body);
+  try {
+    if (!req.user || !req.authInfo) {
+      return res.status(401).json({ error: 'Não autenticado' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      token: req.authInfo,
+      user: req.user
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: 'Erro ao conectar na conta'
+    });
+  }
+  /*const parsedData = userSchemaLogin.safeParse(req.body);
   
   if(!parsedData.success) {
     const errors = parsedData.error.issues.map(issue => issue.message);
@@ -75,12 +92,12 @@ export const loginUser = async (req: Request, res:Response) => {
     if(!user){
       return res.status(401).json({success: false, error: 'Credenciais inválidas.'});
     };
-    const token = req.authInfo ;
+    const token = req.authInfo;
     return res.status(200).json({success:true,token,  user});
 
   } catch (err) {
     res.status(500).json({success: false, error: 'Erro ao conectar na conta.',details: err});
-  };
+  };*/
 };
 
 

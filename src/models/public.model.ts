@@ -76,11 +76,22 @@ export const findUserEmailPasswordModal = async (email:string, password:string) 
     console.log("Usuário não encontrado");
     return null;
   }
-  const match = await bcrypt.compare(password, existingUser.password);
+  const match = await matchPasswordModal(password,existingUser.password)  //bcrypt.compare(password, existingUser.password);
   if(!match) {
     console.log("Senha incorreta");
     return null;
   } 
   return existingUser;
+  
+};
+
+export const matchPasswordModal = async (password: string, hashPassword: string) => {
+  try {
+    if(!password || !hashPassword) return false;
+    return bcrypt.compare(password, hashPassword);
+  } catch (err) {
+     console.error('Erro ao comparar senha:', err);
+    return false;
+  }
   
 }

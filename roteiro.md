@@ -66,7 +66,5 @@ module.exports = {
 #### Rodar o teste:
 ```npm test``
 
-
-
 #### Instalar biblioteca supertest
 ``npm install -D supertest @types/supertest``

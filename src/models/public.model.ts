@@ -29,7 +29,7 @@ export const getUsersModel = async () => {
       _count:{select: {posts:true}}
     }}
   );
-  if(!userAll) return null;
+  if(userAll.length === 0) return null;
   return userAll;
 };
 
@@ -48,10 +48,16 @@ export const getPostsModel = async () => {
       reactDown: true,
       reactUp: true,
       createdAt:true,
-      userId:true
-    }}
+      userId:true,
+      author: {
+        select: {
+          name:true
+        }
+      }
+    }
+  }
   );
-  if(!postsAll) return null;
+  if(postsAll.length === 0) return null;
   return postsAll;
 };
 

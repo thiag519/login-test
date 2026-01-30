@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { userSchemaCadastro } from "../validations/userSchemaCadastro"
-import { createUserModel, findUserEmailPasswordModal, getPostsModel, getUserNameModal, getUsersModel } from "../models/public.model";
-import { userSchemaLogin } from "../validations/userSchemaLogin";
+import { createUserModel, getPostsModel, getUserNameModal, getUsersModel } from "../models/public.model";
 import sharp from "sharp";
 import { v4 } from "uuid";
 import fs from 'node:fs/promises'
@@ -108,7 +107,7 @@ export const getAllPosts = async (req:Request, res:Response) => {
 
     //posts?.filter((e) => {arrPostTitle.push(e.title, e.content) });// casou eu queira apenas os nomes
 
-    if(!posts) return res.status(401).json({success: false, error: "Posts não encontrados."});
+    if(posts == null) return res.status(401).json({success: false, error: "Posts não encontrados."});
     return res.status(200).json({success: true, posts});
   } catch (err) {
     res.status(500).json({error: 'Error ao listar posts.', err});

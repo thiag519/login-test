@@ -119,6 +119,18 @@ export const checkHistoryModal = async (userId:number) => {
   return userHistoric;
 };
 
+export const getHistoryVoteUpModal = async (userId:number) => {
+  const userHistoric = await prisma.history.findMany({where: { userId, post: { reactUp: { gt: 0 }}}});
+  if(!userHistoric) return null;
+  return userHistoric;
+};
+
+export const getHistoryVoteDownModal = async (userId:number) => {
+  const userHistoric = await prisma.history.findMany({where: { userId, post: { reactDown: { gt: 0 }}}});
+  if(!userHistoric) return null;
+  return userHistoric;
+};
+
 export const deleteHitoryUserById = async (userId:number) => {
   const deleteHistory = await prisma.history.deleteMany({
     where:{userId: userId}

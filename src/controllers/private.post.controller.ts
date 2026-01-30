@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { postSchemaCreate } from "../validations/postSchemaCreate";
-import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, votePostModel } from "../models/private.model";
+import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, getHistoryVoteDownModal, getHistoryVoteUpModal, votePostModel } from "../models/private.model";
 import { User } from "../../generated/prisma/client";
 
 
@@ -67,15 +67,13 @@ export const votePostUp = async (req:Request, res:Response) => {
   const userId  = user.id
   try {
     const { idPost } = req.params;
-
     const voteUp:string = 'reactUp';
-
     const postVoteUp = await votePostModel(Number(idPost), userId, voteUp);
     if("error" in postVoteUp ) {
       return res.status(postVoteUp.status).json({error: postVoteUp.error}) 
     };
       
-    return res.status(201).json({success: true, message: "Voto feito com sucesso.", postVoteUp});
+    return res.status(201).json({success: true, message: "Voto feito com sucesso.", /*postVoteUp*/});
  
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao fazer a votação.", err});
@@ -108,6 +106,36 @@ export const getHistoryByUserId = async (req: Request, res: Response) => {
      return res.status(401).json({success:false, error: "Historico não encontrado."}) 
     };
     return res.status(200).json({success: true, message: 'Historico de curtidas do usuario.', historyUser})
+  } catch (err) {
+    return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
+  };
+};
+
+export const getHistoryVoteUpByUserId = async (req: Request, res: Response) => {
+  const user = req.user as User
+  const userId  = user.id 
+  try {
+    const historyUserVoteUp = await getHistoryVoteUpModal(userId);
+    
+    if(!historyUserVoteUp) {
+     return res.status(401).json({success:false, error: "Historico não encontrado."}) 
+    };
+    return res.status(200).json({success: true, message: 'Historico de votos positivos do usuario.', historyUserVoteUp})
+  } catch (err) {
+    return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
+  };
+};
+
+export const getHistoryVoteDownByUserId = async (req: Request, res: Response) => {
+  const user = req.user as User
+  const userId  = user.id 
+  try {
+    const historyUserVoteDown = await getHistoryVoteDownModal(userId);
+    
+    if(!historyUserVoteDown) {
+     return res.status(401).json({success:false, error: "Historico não encontrado."}) 
+    };
+    return res.status(200).json({success: true, message: 'Historico de votos negativos do usuario.', historyUserVoteDown})
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
   };

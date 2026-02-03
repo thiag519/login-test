@@ -119,8 +119,16 @@ export const checkHistoryModal = async (userId:number) => {
   return userHistoric;
 };
 
-export const getHistoryVoteUpModal = async (userId:number) => {
-  const userHistoric = await prisma.history.findMany({where: { userId, post: { reactUp: { gt: 0 }}}});
+export const getHistoryVoteUpModal = async (userId:number) => { 
+  let page = 1;
+  let skip = (page - 1) * 10;
+  const userHistoric = await prisma.history.findMany(
+    {
+      where: { userId, post: { 
+        reactUp: { gt: 0 },
+      }},
+    }
+  );
   if(!userHistoric) return null;
   return userHistoric;
 };

@@ -120,7 +120,7 @@ export const getHistoryVoteUpByUserId = async (req: Request, res: Response) => {
     if(!historyUserVoteUp) {
      return res.status(401).json({success:false, error: "Historico não encontrado."}) 
     };
-    return res.status(200).json({success: true, message: 'Historico de votos positivos do usuario.', historyUserVoteUp})
+    return res.status(200).json({success: true, historyUserVoteUp})
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
   };
@@ -135,7 +135,7 @@ export const getHistoryVoteDownByUserId = async (req: Request, res: Response) =>
     if(!historyUserVoteDown) {
      return res.status(401).json({success:false, error: "Historico não encontrado."}) 
     };
-    return res.status(200).json({success: true, message: 'Historico de votos negativos do usuario.', historyUserVoteDown})
+    return res.status(200).json({success: true, historyUserVoteDown})
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
   };

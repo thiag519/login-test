@@ -42,20 +42,20 @@ export const getPostsModel = async () => {
       skip: skip,
       take: 10,
       select: {
-      id:true,
-      title: true,
-      content: true,
-      reactDown: true,
-      reactUp: true,
-      createdAt:true,
-      userId:true,
-      author: {
-        select: {
-          name:true
-        }
+        id:true,
+        title: true,
+        content: true,
+        reactDown: true,
+        reactUp: true,
+        createdAt:true,
+        userId:true,
+          author: {
+            select: {
+              name:true
+            }
+          }
       }
     }
-  }
   );
   if(postsAll.length === 0) return null;
   return postsAll;

@@ -26,6 +26,29 @@ export const getUserByIdModel = async (id: number) => {
   return existingUser;
 }
 
+export const getUserPostsModel = async (id: number) => {
+  //pegar usuario do bd pelo id
+  const existingUser = await prisma.post.findMany({
+    where: {userId: Number(id)},
+    select: {
+      id:true,
+      title: true,
+      content: true,
+      reactDown: true,
+      reactUp: true,
+      createdAt:true,
+      userId:true,
+      author: {
+        select: {
+          name:true
+        }
+      }
+    }
+  });
+  if(!existingUser) return null;
+  return existingUser;
+}
+
 export const DeleteUserByIdModel = async (id: number) => {
   //pegar usuario do bd pelo id
   const existingUser =  await prisma.user.findUnique({where: {id: Number(id)}});
@@ -120,21 +143,49 @@ export const checkHistoryModal = async (userId:number) => {
 };
 
 export const getHistoryVoteUpModal = async (userId:number) => { 
-  let page = 1;
-  let skip = (page - 1) * 10;
-  const userHistoric = await prisma.history.findMany(
-    {
-      where: { userId, post: { 
-        reactUp: { gt: 0 },
-      }},
+  const userHistoric = await prisma.history.findMany({
+    where: { userId},
+    select: {
+      post: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          reactUp: true,
+          reactDown: true,
+          userId: true,
+          createdAt: true,
+          author:{
+            select:{name:true}
+          }
+        }
+      }
     }
-  );
+  });  
   if(!userHistoric) return null;
   return userHistoric;
 };
 
 export const getHistoryVoteDownModal = async (userId:number) => {
-  const userHistoric = await prisma.history.findMany({where: { userId, post: { reactDown: { gt: 0 }}}});
+  const userHistoric = await prisma.history.findMany({
+    where: { userId},
+    select: {
+      post: {
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          reactUp: true,
+          reactDown: true,
+          userId: true,
+          createdAt: true,
+          author:{
+            select:{name:true}
+          }
+        }
+      }
+    }
+  }); 
   if(!userHistoric) return null;
   return userHistoric;
 };

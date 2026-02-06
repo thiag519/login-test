@@ -7,8 +7,8 @@ const router = Router();
 
 router.get('/ping', (req, res) => res.json({pong: true}))
 router.post('/cadastro', createUser);
-router.get("/users", getAllUsers);
-router.get("/feed", getAllPosts);
+router.get("/users/:page", getAllUsers);
+router.get("/feed/:page", getAllPosts);
 router.get("/feed/:name", getUserName);
 router.post("/login",localStrategyAuth, loginUser);
 //Ezibir todos os posts

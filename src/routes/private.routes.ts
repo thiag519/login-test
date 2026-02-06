@@ -2,14 +2,15 @@ import { Router } from "express";
 import { deleteUser, me, userArea} from "../controllers/private.controller";
 
 import { checkIdUserIdReqAuth } from "../middlewares/checkIdUserIdReqAuth";
-import { createPost, deleteAllHistory, deletePost, getHistoryByUserId, getHistoryVoteDownByUserId, getHistoryVoteUpByUserId, votePostDown, votePostUp } from "../controllers/private.post.controller";
-import { upload } from "../lib/multer";
+import { createPost, deleteAllHistory, deletePost, getHistoryByUserId, getHistoryVoteDownByUserId, getHistoryVoteUpByUserId, getUserPosts, votePostDown, votePostUp } from "../controllers/private.post.controller";
+
 
 const router = Router();
 
 router.delete('/user/:id',checkIdUserIdReqAuth, deleteUser);
 router.get('/user/:id',checkIdUserIdReqAuth, userArea);
 router.post('/post/:id', checkIdUserIdReqAuth, createPost);
+router.get('/posts/:id', checkIdUserIdReqAuth, getUserPosts);
 router.delete('/post/:idPost', deletePost);
 router.patch('/post/voteUp/:idPost', votePostUp);
 router.patch('/post/voteDown/:idPost', votePostDown);

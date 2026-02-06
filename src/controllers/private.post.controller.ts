@@ -1,7 +1,23 @@
 import { Request, Response } from "express";
 import { postSchemaCreate } from "../validations/postSchemaCreate";
-import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, getHistoryVoteDownModal, getHistoryVoteUpModal, votePostModel } from "../models/private.model";
+import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, getHistoryVoteDownModal, getHistoryVoteUpModal, getUserPostsModel, votePostModel } from "../models/private.model";
 import { User } from "../../generated/prisma/client";
+
+
+// Pegar posts do usuário autenticado
+export const getUserPosts = async (req:Request, res:Response) => {
+  try {
+    const {id} = req.params;
+    const posts = await getUserPostsModel(Number(id));
+    if(posts == null) {
+      return res.status(401).json({success:false, error: "Posts do usuário não encontrado."});
+    };
+    //console.log(posts)
+    return res.status(200).json({success: true, message: "Posts do usuário encontrado.", posts});
+  } catch (err) {
+    return res.status(500).json({success: false, error: "Erro ao buscar Posts do usuário.", err});
+  };
+}
 
 
 // Crear post
@@ -115,12 +131,12 @@ export const getHistoryVoteUpByUserId = async (req: Request, res: Response) => {
   const user = req.user as User
   const userId  = user.id 
   try {
-    const historyUserVoteUp = await getHistoryVoteUpModal(userId);
+    const postsUp = await getHistoryVoteUpModal(userId);
     
-    if(!historyUserVoteUp) {
+    if(!postsUp) {
      return res.status(401).json({success:false, error: "Historico não encontrado."}) 
     };
-    return res.status(200).json({success: true, historyUserVoteUp})
+    return res.status(200).json({success: true, postsUp})
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
   };
@@ -130,12 +146,12 @@ export const getHistoryVoteDownByUserId = async (req: Request, res: Response) =>
   const user = req.user as User
   const userId  = user.id 
   try {
-    const historyUserVoteDown = await getHistoryVoteDownModal(userId);
+    const postsDown = await getHistoryVoteDownModal(userId);
     
-    if(!historyUserVoteDown) {
+    if(!postsDown) {
      return res.status(401).json({success:false, error: "Historico não encontrado."}) 
     };
-    return res.status(200).json({success: true, historyUserVoteDown})
+    return res.status(200).json({success: true, postsDown})
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao listar historico.", err});
   };

@@ -28,9 +28,10 @@ export const createUser = async (req: Request, res: Response) => {
 
 
 export const getAllUsers = async (req:Request, res:Response) => {
+  let pags: number = Number(req.params.page) || 1;
   //const arrName:string[] = [];
   try {
-    const users = await getUsersModel();
+    const users = await getUsersModel(pags);
     //users?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
     
     if(users == null) return res.status(401).json({success: false, error: "Usuários não encontrados."});
@@ -101,9 +102,10 @@ export const loginUser = async (req: Request, res:Response) => {
 
 
 export const getAllPosts = async (req:Request, res:Response) => {
+  let pags: number = Number(req.params.page) || 1;
  // const arrPostTitle:string[] = [];
   try {
-    const posts = await getPostsModel();
+    const posts = await getPostsModel(pags);
 
     //posts?.filter((e) => {arrPostTitle.push(e.title, e.content) });// casou eu queira apenas os nomes
 

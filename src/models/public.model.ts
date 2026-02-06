@@ -14,14 +14,14 @@ export const createUserModel = async ( name:string, email:string, password:strin
 };
 
 
-export const getUsersModel = async () => {
-  let page = 1;
-  let skip = (page - 1) * 10;
+export const getUsersModel = async (pags: number) => {
+  pags < 1? pags = 1 : pags = pags;
+  let skip = (pags - 1) * 2;
   const userAll = await prisma.user.findMany(
     {
       orderBy:{createdAt: 'desc'},
       skip: skip,
-      take: 10,
+      take: 2,
       select: {
       id:true,
       name:true,
@@ -33,14 +33,18 @@ export const getUsersModel = async () => {
   return userAll;
 };
 
-export const getPostsModel = async () => {
-  let page = 1;
-  let skip = (page - 1) * 10;
+export const getPostsModel = async (pags: number) => {
+  pags < 1? pags = 1 : pags = pags;
+  /*let take = pags + 2;
+  let skip = (pags - 1) * take ;
+  */
+  let skip = 0 ;
+  let take = 2 + pags;
   const postsAll = await prisma.post.findMany(
     {
       orderBy:{createdAt: 'desc'},
-      skip: skip,
-      take: 10,
+      skip,
+      take,
       select: {
         id:true,
         title: true,
@@ -49,11 +53,11 @@ export const getPostsModel = async () => {
         reactUp: true,
         createdAt:true,
         userId:true,
-          author: {
-            select: {
-              name:true
-            }
+        author: {
+          select: {
+            name:true
           }
+        }
       }
     }
   );

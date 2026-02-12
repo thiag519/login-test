@@ -47,8 +47,8 @@ model History {
   postId     Int
   createdAt  DateTime    @default(now())
 
-  post       Post        @relation(fields: [postId], references: [id])
-  user       User        @relation(fields: [userId], references: [id])
+  post       Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, postId])
 }

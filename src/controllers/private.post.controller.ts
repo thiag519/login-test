@@ -47,7 +47,8 @@ export const deletePost = async (req:Request, res:Response) => {
   const idUser = user.id;
   try {
     const { idPost } = req.params;
-
+    
+    console.log("id do post: ",idPost," id do user: ",idUser)
     const postDeleted = await DeletePostByIdModel(Number(idPost), Number(idUser) );
     if(!postDeleted) {
       return res.status(401).json({success:false, error: "Post ou usuário não encontrado."});

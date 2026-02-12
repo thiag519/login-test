@@ -9,7 +9,7 @@ router.get('/ping', (req, res) => res.json({pong: true}))
 router.post('/cadastro', createUser);
 router.get("/users/:page", getAllUsers);
 router.get("/feed/:page", getAllPosts);
-router.get("/feed/:name", getUserName);
+router.get("/feed/user/:name", getUserName);
 router.post("/login",localStrategyAuth, loginUser);
 //Ezibir todos os posts
 router.get("/posts", getAllPosts);

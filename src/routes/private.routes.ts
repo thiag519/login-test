@@ -11,7 +11,7 @@ router.delete('/user/:id',checkIdUserIdReqAuth, deleteUser);
 router.get('/user/:id',checkIdUserIdReqAuth, userArea);
 router.post('/post/:id', checkIdUserIdReqAuth, createPost);
 router.get('/posts/:id', checkIdUserIdReqAuth, getUserPosts);
-router.delete('/post/:idPost', deletePost);
+router.delete('/delete/post/:idPost', deletePost);
 router.patch('/post/voteUp/:idPost', votePostUp);
 router.patch('/post/voteDown/:idPost', votePostDown);
 router.delete('/user/historico/:id', checkIdUserIdReqAuth, deleteAllHistory);

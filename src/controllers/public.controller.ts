@@ -50,7 +50,7 @@ export const getUserName = async (req:Request, res:Response) => {
     if(!name)return res.status(401).json({success:false, error: "Usuário não encontrado."});
     const user = await getUserNameModal(name);
     user?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
-
+    console.log(name)
     if(arrName == null) return res.status(400).json({success:false, error: 'Usuário não encontrado.'});
     return res.status(200).json({success: true, arrName});
   } catch (err) {

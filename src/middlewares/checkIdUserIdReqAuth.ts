@@ -4,7 +4,7 @@ import { User } from "../../generated/prisma/client";
 export const checkIdUserIdReqAuth  = (req: Request, res:Response, next:NextFunction) => {
   //id do jwt
   const userIdReq = req.user as User | undefined;
-  console.log("id da req: ",userIdReq?.id)
+  //console.log("id da req: ",userIdReq?.id)
   if(!userIdReq) {
     return res.status(401).json({success: false, error: 'Token inválido ou não fornecido.'});
   };

@@ -32,7 +32,7 @@ export const createPost = async (req:Request, res: Response) => {
     }
   try {
     const {title, content} = parsedData.data;
-    //if(!title || !content ) return res.status(400).json({success:false, error: "Dados imcompletos. "})
+    if( !content ) return res.status(401).json({success:false, error: "Dados imcompletos. "})
     const newPost = await createPostModel(title, content, userId);
     return res.status(201).json({success:true, newPost});
     

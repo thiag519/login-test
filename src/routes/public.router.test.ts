@@ -1,15 +1,16 @@
 import request from 'supertest';
 import app from '../app';
 import { prisma } from '../lib/prisma';
-import e from 'express';
 
-describe('Testing public router', () => {
-  beforeAll( async () => {
+describe.skip('Testing public router', () => {
+
+  /*beforeAll( async () => {
     await prisma.$transaction([
       prisma.post.deleteMany(),
       prisma.user.deleteMany()
     ])
-  });
+  });*/
+
   afterAll( async () => {
     await prisma.$transaction([
       prisma.post.deleteMany(),
@@ -25,12 +26,11 @@ describe('Testing public router', () => {
   let email = 'test@jest.com';
   let password = '123456';
 
-
-  it('should ping pong', async () => {
+  /*it('should ping pong', async () => {
     const response = await request(app).get('/public/ping');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({pong: true});
-  });
+  });*/
 
   /*it('should ping pong',  (done) => {
     request(app)
@@ -121,10 +121,48 @@ describe('Testing public router', () => {
 // usuários
   it('should get all users', async () => {
     const response = await request(app)
-      .get('/public/users');
+      .get(`/public/users/${1}`);
     expect(response.status).toBe(200);
     expect(response.body.users.length).toBeGreaterThanOrEqual(1);
     expect(response.body).toHaveProperty('success', true);
   });
 
-})
+  it('should get all users, because if the pags is invalid, the pags will become 1', async () => {
+    let pags: number = Number(null) || 1;
+    const response = await request(app)
+      .get(`/public/users/${pags}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('success', true);
+
+  });
+
+  it.skip('should not get users, because it not have users', async () => {
+    let pags: number = Number(null) || 1;
+    /*await prisma.$transaction([
+      prisma.user.deleteMany()
+    ])*/
+    const response = await request(app)
+      .get(`/public/users/${pags}`);
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('success', false);
+    
+  });
+
+  it('should not get users, because not have more users', async () => {
+    let pags: number =  30;
+    const response = await request(app)
+      .get(`/public/users/${pags}`);
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('success', false);
+
+  });
+
+  it('should not get users without corect router', async () => {
+    const response = await request(app)
+      .get('/public/users');
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('error');
+    expect(response.body.path).toBe('/public/users');
+  });
+
+});

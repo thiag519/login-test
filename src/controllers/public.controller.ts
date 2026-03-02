@@ -30,6 +30,7 @@ export const createUser = async (req: Request, res: Response) => {
 export const getAllUsers = async (req:Request, res:Response) => {
   let pags: number = Number(req.params.page) || 1;
   //const arrName:string[] = [];
+  console.log(pags)
   try {
     const users = await getUsersModel(pags);
     //users?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes

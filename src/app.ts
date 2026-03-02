@@ -8,6 +8,7 @@ import { jwtStrategyAuth } from './middlewares/jwtStrategyAuth';
 import passport from 'passport';
 import { jwtStrategy } from './lib/passport-jwt';
 import { localStrategy } from './lib/passport-local';
+import { error } from 'node:console';
 
 
 const app = express();
@@ -24,7 +25,13 @@ app.use("/public", publicRoutes);
 app.use("/private",jwtStrategyAuth, privateRoutes);// colocar jwtMiddleware aqui 
 // rotas adimin
 
-
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Rota não encontrada',
+    path: req.originalUrl,
+    method: req.method
+  });
+});
 
 
 export default app;

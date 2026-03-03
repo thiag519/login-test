@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { DeleteUserByIdModel, findUserByIdModel, getUserByIdModel } from "../models/private.model";
 import jwt from 'jsonwebtoken';
+import { User } from "../../generated/prisma/client";
 
 
 // Àrea de usuário 
@@ -22,6 +23,9 @@ export const userArea = async (req:Request, res:Response) => {
 // Remover usuario
 export const deleteUser = async (req:Request, res:Response) => {
   try {
+    const user = req.user as User;
+    const userId = user.id; 
+    console.log("ID do usuário autenticado:", userId);
     const {id} = req.params;
     const userDeleted = await DeleteUserByIdModel(Number(id));
     if(userDeleted == null) {

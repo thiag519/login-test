@@ -2,7 +2,7 @@ import { User } from '../../generated/prisma/client';
 import { prisma } from '../lib/prisma';
 import * as publicModal from './public.model'
 
-describe.skip('Testing user model public', () => {
+describe('Testing user model public', () => {
 
   beforeAll( async () => {
     await prisma.$transaction([

@@ -84,6 +84,19 @@ export const DeletePostByIdModel = async (idPost: number, idUser:number) => {
   return null;
 }
 
+
+export const DeletePostByIdForAdminModel = async (idPost: number) => {
+  const existingPost = await prisma.post.findUnique({where: {
+    id: Number(idPost)
+  }});
+  if(existingPost) {
+    const postDeleted = await prisma.post.delete({where: {id: Number(idPost)}});
+    return postDeleted;
+  };
+  console.log("Post não encontrado.")
+  return null;
+}
+
 /*export const votePostUpModel = async (idPost: number) => {
   const existingPost = await prisma.post.findFirst({where: {
     id: Number(idPost)

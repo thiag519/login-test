@@ -51,18 +51,36 @@ describe('Testing private router', () => {
     expect(response.body).toHaveProperty('newPost');
   });
 
+  it('should not create a new post with invalid token',async () => { 
+    const response = await request(app)
+      .post(`/private/post/${userId}`)
+      .set('Authorization', `Bearer invalidtoken`)
+      .send({title,content});
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error');
+  });
+
+  it('should not create a new post without authorization',async () => { 
+    const response = await request(app)
+      .post(`/private/post/${userId}`)
+      .send({title,content});
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error');
+  });
+
+  it('should not create a new post, if userId differs from param',async () => { 
+    const response = await request(app)
+      .post(`/private/post/${3}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({title,content});
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('error');
+  });
+
   it('should not allow to create post with an empty content',async () => {
     const response = await request(app)
       .post(`/private/post/${userId}`)
       .send({title,content: ''});
-        expect(response.status).toBe(401);
-        expect(response.body.error).not.toBeNull();
-  });
-
-  it('should not allow to create post without title',async () => {
-    const response = await request(app)
-      .post(`/private/post/${userId}`)
-      .send({content});
         expect(response.status).toBe(401);
         expect(response.body.error).not.toBeNull();
   });

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { postSchemaCreate } from "../validations/postSchemaCreate";
-import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdModel, getHistoryVoteDownModal, getHistoryVoteUpModal, getUserPostsModel, votePostModel } from "../models/private.model";
+import { checkHistoryModal, createPostModel, deleteHitoryUserById, DeletePostByIdForAdminModel, DeletePostByIdModel, getHistoryVoteDownModal, getHistoryVoteUpModal, getUserPostsModel, votePostModel } from "../models/private.model";
 import { User } from "../../generated/prisma/client";
 
 
@@ -44,16 +44,26 @@ export const createPost = async (req:Request, res: Response) => {
 // Deletar post
 export const deletePost = async (req:Request, res:Response) => {
   const user = req.user as User; 
+  
   const idUser = user.id;
   try {
     const { idPost } = req.params;
     
-    console.log("id do post: ",idPost," id do user: ",idUser)
-    const postDeleted = await DeletePostByIdModel(Number(idPost), Number(idUser) );
-    if(!postDeleted) {
-      return res.status(401).json({success:false, error: "Post ou usuário não encontrado."});
+    if(user.role === "ADMIN") {
+      const postDeletedForAdmin = await DeletePostByIdForAdminModel(Number(idPost));
+      if(!postDeletedForAdmin) {
+        return res.status(401).json({success:false, error: "Post ou usuário não encontrado."});
+      };
+      return res.status(200).json({success: true, message: "Post deletado com sucesso.", postDeletedForAdmin});
+    }else {
+      //console.log("id do post: ",idPost," id do user: ",idUser)
+      const postDeleted = await DeletePostByIdModel(Number(idPost), Number(idUser) );
+      if(!postDeleted) {
+        return res.status(401).json({success:false, error: "Post ou usuário não encontrado."});
+      };
+      return res.status(200).json({success: true, message: "Post deletado com sucesso.", postDeleted});
     };
-    return res.status(200).json({success: true, message: "Post deletado com sucesso.", postDeleted});
+  
   } catch (err) {
     return res.status(500).json({success: false, error: "Erro ao excluir post.", err});
   };

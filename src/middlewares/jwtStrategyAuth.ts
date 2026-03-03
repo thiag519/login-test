@@ -8,7 +8,7 @@ export const jwtStrategyAuth: RequestHandler = (req, res, next) => {
     (err: any, user: User |false) => {
       if(err){
         console.log("Erro no Passport JWT: ",err);
-        return res.status(500).json({error: 'Erro interno na autenticaçãi.'});
+        return res.status(500).json({error: 'Erro interno na autenticação.'});
       }
       if(!user) {
         return res.status(401).json({error: "Acesso negado, token inválido ou não existente."});

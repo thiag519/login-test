@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../app';
 import { prisma } from '../lib/prisma';
 
-describe.skip('Testing public router', () => {
+describe('Testing public router', () => {
 
   /*beforeAll( async () => {
     await prisma.$transaction([
@@ -41,6 +41,7 @@ describe.skip('Testing public router', () => {
       })
   });*/
 
+  // cadastro
   it('should register a new user',async () => {
     const response = await request(app)
       .post('/public/cadastro')
@@ -136,11 +137,11 @@ describe.skip('Testing public router', () => {
 
   });
 
-  it.skip('should not get users, because it not have users', async () => {
+  it('should not get users, because it not have users', async () => {
     let pags: number = Number(null) || 1;
-    /*await prisma.$transaction([
+    await prisma.$transaction([
       prisma.user.deleteMany()
-    ])*/
+    ])
     const response = await request(app)
       .get(`/public/users/${pags}`);
     expect(response.status).toBe(401);

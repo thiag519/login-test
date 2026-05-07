@@ -66,12 +66,32 @@ export const getPostsModel = async (pags: number) => {
 };
 
 
-export const getUserNameModal = async (nome:string) => {
+export const getUsersNameModal = async (nome:string) => {
   const user = await prisma.user.findMany({
     where : {
       name:{
         startsWith:nome, mode: 'insensitive', 
-      } 
+      }
+    }
+  });
+  if(!user) return null;
+  return user;
+};
+
+export const getUserByIdModal = async (id:number) => {
+  const user = await prisma.user.findUnique({
+    where:{id:  id},
+    select:{
+      name:true,
+      createdAt:true,
+      posts:{
+        select: {
+          title: true,
+          content: true,
+          reactUp:true,
+          reactDown:true
+        }
+      }
     }
   });
   if(!user) return null;

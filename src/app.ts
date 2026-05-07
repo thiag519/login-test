@@ -8,7 +8,6 @@ import { jwtStrategyAuth } from './middlewares/jwtStrategyAuth';
 import passport from 'passport';
 import { jwtStrategy } from './lib/passport-jwt';
 import { localStrategy } from './lib/passport-local';
-import { error } from 'node:console';
 
 
 const app = express();

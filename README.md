@@ -1,4 +1,4 @@
-# 🔐 Login & Feed API — Back-end (MVP)
+#  Login & Feed API — Back-end (MVP)
 
 Este é o back-end de um MVP de autenticação, desenvolvido em Node.js, responsável por login, validação de usuários e emissão de tokens JWT.
 
@@ -150,7 +150,7 @@ module.exports = {
 
 ``http://localhost:3001``
 
-### 🧪 Status do Projeto
+###  Status do Projeto
 
  **MVP funcional**
  **Segurança aplicada**

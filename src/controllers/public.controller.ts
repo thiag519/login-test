@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { userSchemaCadastro } from "../validations/userSchemaCadastro"
-import { createUserModel, getPostsModel, getUserNameModal, getUsersModel } from "../models/public.model";
+import { createUserModel, getPostsModel, getUsersNameModal, getUsersModel, getUserByIdModal } from "../models/public.model";
 import sharp from "sharp";
 import { v4 } from "uuid";
 import fs from 'node:fs/promises'
@@ -42,15 +42,15 @@ export const getAllUsers = async (req:Request, res:Response) => {
 };
 
 
-export const getUserName = async (req:Request, res:Response) => {
+export const getUsersName = async (req:Request, res:Response) => {
   const {name} = req.params;
-  const arrName:string[] = [];
+  const arrName:{name:string, id:number}[] = [];
   try {
     
     if(!name)return res.status(401).json({success:false, error: "Usuário não encontrado."});
-    const user = await getUserNameModal(name);
-    user?.filter((e) => {arrName.push(e.name) });// casou eu queira apenas os nomes
-    console.log(name)
+    const user = await getUsersNameModal(name);
+    user?.filter((e) => {arrName.push({name: e.name, id: e.id}) });// casou eu queira apenas os nomes
+
     if(arrName == null) return res.status(400).json({success:false, error: 'Usuário não encontrado.'});
     return res.status(200).json({success: true, arrName});
   } catch (err) {
@@ -58,6 +58,19 @@ export const getUserName = async (req:Request, res:Response) => {
   }
 };
 
+export const getUserById = async (req:Request, res:Response) => {
+  const id = Number(req.params.id);
+  try {
+    
+    if(!id) return res.status(401).json({success:false, error: "Usuário não encontrado."});
+    const user = await getUserByIdModal(id);
+    //console.log(user, id)
+    if(user == null) return res.status(400).json({success:false, error: 'Usuário não encontrado.'});
+    return res.status(200).json({success: true, user});
+  } catch (err) {
+    res.status(500).json({error: 'Erro ao buscar usuário.', err});
+  }
+};
 
 export const loginUser = async (req: Request, res:Response) => {
   try {

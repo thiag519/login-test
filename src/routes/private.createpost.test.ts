@@ -73,7 +73,7 @@ describe('Testing private router', () => {
       .post(`/private/post/${3}`)
       .set('Authorization', `Bearer ${token}`)
       .send({title,content});
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(403);
     expect(response.body).toHaveProperty('error');
   });
 

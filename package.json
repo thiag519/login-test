@@ -7,9 +7,8 @@
     "test": "jest --runInBand",
     "test:db": "dotenv -e .env.test -- prisma migrate deploy",
     "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/server.ts",
-    
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -44,6 +43,7 @@
     "@types/passport-http-bearer": "^1.0.42",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
     "dotenv-cli": "^11.0.0",

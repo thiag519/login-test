@@ -47,7 +47,7 @@ describe('Testing user model public', () => {
   })
 
   it('should get user by name', async () => {
-    const users = await publicModal.getUserNameModal(name);
+    const users = await publicModal.getUsersNameModal(name);
     expect(users).not.toBeNull();
   });
 

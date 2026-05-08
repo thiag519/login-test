@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://login-front.vercel.app"
+    "https://login-test-front.vercel.app/"
   ],
   credentials:true
 }))

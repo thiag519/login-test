@@ -7,7 +7,7 @@ const router = Router();
 
 router.get('/ping', (req, res) => res.json({pong: true}))
 router.post('/cadastro', createUser);
-router.get("/users/:page", getAllUsers);
+router.get("/feed/users/:page", getAllUsers);
 router.get("/feed/:page", getAllPosts);
 router.get("/feed/user/:name", getUsersName);
 router.get("/feed/user/info/:id", getUserById);

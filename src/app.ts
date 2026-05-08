@@ -13,7 +13,13 @@ import { localStrategy } from './lib/passport-local';
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://login-front.vercel.app"
+  ],
+  credentials:true
+}))
 
 passport.use(jwtStrategy);// passo 6 jwt
 passport.use(localStrategy);

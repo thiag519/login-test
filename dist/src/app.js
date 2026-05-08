@@ -14,7 +14,13 @@ const passport_local_1 = require("./lib/passport-local");
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: [
+        "http://localhost:3000",
+        "https://login-test-front.vercel.app/"
+    ],
+    credentials: true
+}));
 passport_1.default.use(passport_jwt_1.jwtStrategy); // passo 6 jwt
 passport_1.default.use(passport_local_1.localStrategy);
 app.use(passport_1.default.initialize());

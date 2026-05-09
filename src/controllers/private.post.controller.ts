@@ -24,8 +24,6 @@ export const getUserPosts = async (req:Request, res:Response) => {
 export const createPost = async (req:Request, res: Response) => {
   const user = req.user as User;
   const userId = user.id;
-console.log(req.headers.authorization);
-console.log(req.user);
 
   const parsedData = postSchemaCreate.safeParse(req.body);
     if(!parsedData.success) {
